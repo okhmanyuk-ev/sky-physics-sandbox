@@ -77,12 +77,11 @@ void Application::initialize()
 
 		return Actions::Collection::MakeSequence(
 			Actions::Collection::Wait(delay),
-			Actions::Collection::Execute([spawnBox]{
-				spawnBox();
-			}),
-			Actions::Collection::Wait(delay),
-			Actions::Collection::Execute([spawnBall]{
-				spawnBall();
+			Actions::Collection::Execute([spawnBox, spawnBall]{
+				if (Common::Helpers::Chance(0.5f))
+					spawnBox();
+				else
+					spawnBall();
 			})
 		);
 	})));
