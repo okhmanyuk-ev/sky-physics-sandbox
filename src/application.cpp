@@ -93,7 +93,7 @@ void Application::initialize()
 	
 	framer.setCallback([spawnBox, spawnBall]{
 		ImGui::Begin("Options", nullptr, ImGui::User::ImGuiWindowFlags_ControlPanel);
-		ImGui::SetWindowPos(ImGui::User::BottomLeftCorner());
+		ImGui::SetWindowPos(ImGui::User::TopLeftCorner());
 
 		ImGui::Checkbox("Auto spawn", &auto_spawn);
 		ImGui::Separator();
