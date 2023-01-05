@@ -70,6 +70,23 @@ void Application::initialize()
 		world->attach(ball);
 	};
 
+	static bool auto_spawn = true;
+
+	screen->runAction(Actions::Collection::Pausable([]{ return auto_spawn; }, Actions::Collection::RepeatInfinite([spawnBox, spawnBall]() -> Actions::Collection::UAction {
+		const auto delay = 0.125f;
+
+		return Actions::Collection::MakeSequence(
+			Actions::Collection::Wait(delay),
+			Actions::Collection::Execute([spawnBox]{
+				spawnBox();
+			}),
+			Actions::Collection::Wait(delay),
+			Actions::Collection::Execute([spawnBall]{
+				spawnBall();
+			})
+		);
+	})));
+
 	static auto framer = Common::FrameSystem::Framer();
 	
 	framer.setCallback([spawnBox, spawnBall]{
@@ -119,6 +136,10 @@ void Application::initialize()
 				spawnBall();
 			}
 		}
+
+		ImGui::Separator();
+
+		ImGui::Checkbox("Auto spawn", &auto_spawn);
 
 		ImGui::End();
 	});
