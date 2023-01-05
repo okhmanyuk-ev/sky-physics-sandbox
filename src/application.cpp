@@ -51,10 +51,13 @@ void Application::initialize()
 		}));
 	};
 
+	static glm::vec2 BoxSize = { 24.0f, 24.0f };
+	static float BallSize = 24.0f;
+
 	auto spawnBox = [world, enableAutoSuicide]{
 		auto box = std::make_shared<Shared::PhysHelpers::Entity>();
 		box->setType(Shared::PhysHelpers::Entity::Type::Dynamic);
-		box->setSize({ 24.0f, 24.0f });
+		box->setSize(BoxSize);
 		box->setPivot(0.5f);
 		enableAutoSuicide(box);
 		world->attach(box);
@@ -64,7 +67,7 @@ void Application::initialize()
 		auto ball = std::make_shared<Shared::PhysHelpers::Entity>();
 		ball->setType(Shared::PhysHelpers::Entity::Type::Dynamic);
 		ball->setShape(Shared::PhysHelpers::Entity::Shape::Circle);
-		ball->setSize({ 24.0f, 24.0f });
+		ball->setSize(BallSize);
 		ball->setPivot(0.5f);
 		enableAutoSuicide(ball);
 		world->attach(ball);
@@ -92,6 +95,12 @@ void Application::initialize()
 		ImGui::Begin("Options", nullptr, ImGui::User::ImGuiWindowFlags_ControlPanel);
 		ImGui::SetWindowPos(ImGui::User::BottomLeftCorner());
 
+		ImGui::Checkbox("Auto spawn", &auto_spawn);
+		ImGui::Separator();
+		ImGui::DragFloat2("Box size", (float*)&BoxSize, 1.0f, 1.0f, 256.0f);
+		ImGui::DragFloat("Ball size", &BallSize, 1.0f, 1.0f, 256.0f);
+		ImGui::Separator();
+
 		if (ImGui::Button("Spawn 1 box"))
 		{
 			spawnBox();
@@ -113,7 +122,7 @@ void Application::initialize()
 			}
 		}
 
-		ImGui::Spacing();
+		ImGui::Separator();
 
 		if (ImGui::Button("Spawn 1 ball"))
 		{
@@ -135,10 +144,6 @@ void Application::initialize()
 				spawnBall();
 			}
 		}
-
-		ImGui::Separator();
-
-		ImGui::Checkbox("Auto spawn", &auto_spawn);
 
 		ImGui::End();
 	});
