@@ -53,12 +53,14 @@ void Application::initialize()
 
 	static glm::vec2 BoxSize = { 24.0f, 24.0f };
 	static float BallSize = 24.0f;
+	static float y = -96.0f;
 
 	auto spawnBox = [world, enableAutoSuicide]{
 		auto box = std::make_shared<Shared::PhysHelpers::Entity>();
 		box->setType(Shared::PhysHelpers::Entity::Type::Dynamic);
 		box->setSize(BoxSize);
 		box->setPivot(0.5f);
+		box->setY(y);
 		enableAutoSuicide(box);
 		world->attach(box);
 	};
@@ -69,11 +71,13 @@ void Application::initialize()
 		ball->setShape(Shared::PhysHelpers::Entity::Shape::Circle);
 		ball->setSize(BallSize);
 		ball->setPivot(0.5f);
+		ball->setY(y);
 		enableAutoSuicide(ball);
 		world->attach(ball);
 	};
 
 	static bool auto_spawn = true;
+	static float ChanceValue = 0.5f;
 
 	screen->runAction(Actions::Collection::Pausable([]{ return auto_spawn; }, Actions::Collection::RepeatInfinite([spawnBox, spawnBall]() -> Actions::Collection::UAction {
 		const auto delay = 0.125f;
@@ -81,7 +85,7 @@ void Application::initialize()
 		return Actions::Collection::MakeSequence(
 			Actions::Collection::Wait(delay),
 			Actions::Collection::Execute([spawnBox, spawnBall]{
-				if (Common::Helpers::Chance(0.5f))
+				if (Common::Helpers::Chance(ChanceValue))
 					spawnBox();
 				else
 					spawnBall();
@@ -99,6 +103,7 @@ void Application::initialize()
 		ImGui::Separator();
 		ImGui::DragFloat2("Box size", (float*)&BoxSize, 1.0f, 1.0f, 256.0f);
 		ImGui::DragFloat("Ball size", &BallSize, 1.0f, 1.0f, 256.0f);
+		ImGui::SliderFloat("Ball <-> Box", &ChanceValue, 0.0f, 1.0f);
 		ImGui::Separator();
 
 		if (ImGui::Button("Spawn 1 box"))
