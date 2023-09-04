@@ -13,7 +13,7 @@ Application::Application() : Shared::Application(PROJECT_NAME, { Flag::Audio, Fl
 #if defined(PLATFORM_WINDOWS)
 	PLATFORM->rescale(1.5f);
 #endif
-	RENDERER->setVsync(true);
+	skygfx::SetVsync(true);
 
 	STATS->setAlignment(Shared::StatsSystem::Align::BottomRight);
 
